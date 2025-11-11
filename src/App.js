@@ -212,24 +212,36 @@ export default function App() {
   const [showAnswer, setShowAnswer] = useState(false);
 
   useEffect(() => {
-  fetch(process.env.PUBLIC_URL + "/jeopardy_rebucketed.json")
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(`Failed to load questions: ${res.status}`);
-        }
-        return res.json();
-      })
-      .then((data) => {
-        // Normalize all study buckets
+  const jsonPath = process.env.PUBLIC_URL + "/jeopardy_rebucketed.json";
+  console.log("📂 Trying to load JSON from:", jsonPath);
+
+  fetch(jsonPath)
+    .then((res) => {
+      console.log("✅ Fetch response:", res.status, res.statusText);
+      if (!res.ok) {
+        throw new Error(`Failed to load questions: ${res.status}`);
+      }
+      return res.text(); // get raw text first
+    })
+    .then((text) => {
+      console.log("📝 Raw JSON text length:", text.length);
+      try {
+        const data = JSON.parse(text);
+        console.log("✅ Parsed JSON successfully. # of questions:", data.length);
         const normalizedData = data.map(q => ({
           ...q,
           originalBucket: q.study_bucket,
           study_bucket: normalizeBucket(q.study_bucket)
         }));
         setAllQuestions(normalizedData);
-      })
-      .catch(err => console.error("Error loading questions:", err));
-  }, []);
+      } catch (parseErr) {
+        console.error("❌ JSON parse error:", parseErr);
+        console.log("👀 Sample of file content:", text.slice(0, 300));
+      }
+    })
+    .catch(err => console.error("🚨 Error loading questions:", err));
+}, []);
+
 
 
   // Get unique study buckets from all questions
