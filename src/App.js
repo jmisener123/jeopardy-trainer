@@ -212,8 +212,13 @@ export default function App() {
   const [showAnswer, setShowAnswer] = useState(false);
 
   useEffect(() => {
-    fetch("/jeopardy_rebucketed.json")
-      .then((res) => res.json())
+  fetch(process.env.PUBLIC_URL + "/jeopardy_rebucketed.json")
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`Failed to load questions: ${res.status}`);
+        }
+        return res.json();
+      })
       .then((data) => {
         // Normalize all study buckets
         const normalizedData = data.map(q => ({
@@ -225,6 +230,7 @@ export default function App() {
       })
       .catch(err => console.error("Error loading questions:", err));
   }, []);
+
 
   // Get unique study buckets from all questions
   const studyBuckets = useMemo(() => {
