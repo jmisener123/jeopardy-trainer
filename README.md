@@ -9,8 +9,8 @@ You can filter by category ("study bucket") and difficulty, reveal answers inter
 
 🚀 Features
 
-🎲 Randomized question generation
-🧩 Category and difficulty filters
-🔍 Instant answer reveal
-⬅️ "Previous question" navigation
-⚡ React app, deployed via Vercel
+- 🎲 Randomized question generation
+- 🧩 Category and difficulty filters
+- 🔍 Instant answer reveal
+- ⬅️ "Previous question" navigation
+- ⚡ React app, deployed via Vercel
